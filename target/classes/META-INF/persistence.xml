@@ -4,7 +4,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http:/
 	<persistence-unit name="projetoum" transaction-type="RESOURCE_LOCAL">
 	    <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 		
-	    <!-- <properties>
+	   <properties>
 		    <property name="javax.persistence.schema-generation.database.action" value="drop-and-create" />
 		    <property name="javax.persistence.sql-load-script-source" value="META-INF/script.sql"/>    
 		    <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect" />
@@ -17,6 +17,6 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http:/
 			<property name="useUnicode" value="true"/>  
             <property name="characterEncoding" value="UTF-8"/>
             <property name="hibernate.default_schema" value="indicadores"/>
-     	</properties>  -->
+     	</properties>  
 	</persistence-unit>
 </persistence>
