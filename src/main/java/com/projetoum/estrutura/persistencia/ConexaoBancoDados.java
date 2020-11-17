@@ -46,7 +46,7 @@ public class ConexaoBancoDados {
 		properties.put("javax.persistence.schema-generation.database.action","update");
 		properties.put("hibernate.dialect","org.hibernate.dialect.MySQL5Dialect");
 		properties.put("hibernate.connection.driver_class","com.mysql.jdbc.Driver");
-		properties.put("hibernate.connection.url", "jdbc:mysql://localhost:3306/projeto_pooe?createDatabaseIfNotExist=true&useSSL=false");
+		properties.put("hibernate.connection.url", "jdbc:mysql://localhost:3306/projetoum?createDatabaseIfNotExist=true&useSSL=false");
 		properties.put("hibernate.connection.username", "root");
 		//properties.put("hibernate.connection.password", "root");
 		properties.put("hibernate.c3p0.min_size", "10");
@@ -59,7 +59,7 @@ public class ConexaoBancoDados {
 		properties.put("hibernate.format_sql", "true");
 		properties.put("useUnicode", "true");
 		properties.put("characterEncoding", "UTF-8");
-		properties.put("hibernate.default_schema", "projeto");
+		properties.put("hibernate.default_schema", "projetoum");
 		
 		return Persistence.createEntityManagerFactory(VariaveisProjeto.PERSISTENCE_UNIT_NAME, properties);
 	}
