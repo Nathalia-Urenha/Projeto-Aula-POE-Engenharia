@@ -22,14 +22,17 @@ public class UsuarioService extends ConexaoBancoService {
 		Integer toReturn = 0;
 
 		EntityTransaction trx = this.getTransaction();
+		
+		toReturn = validarDigitacao(usuario);
 
-		if ( validarDigitacao(usuario) == VariaveisProjeto.DIGITACAO_OK) {
+		if ( toReturn == VariaveisProjeto.DIGITACAO_OK) {
 
 			try {
 
 				trx.begin();
 				this.getUsuarioDao().save(usuario);
 				trx.commit();
+				toReturn = VariaveisProjeto.INCLUSAO_REALIZADA;
 
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -42,7 +45,7 @@ public class UsuarioService extends ConexaoBancoService {
 				this.close();
 			}
 		} else {
-			toReturn = VariaveisProjeto.CAMPO_VAZIO;
+			toReturn = VariaveisProjeto.NOME_CAMPO_VAZIO;
 		}
 		return toReturn; 
 	}
@@ -53,14 +56,17 @@ public class UsuarioService extends ConexaoBancoService {
 		Integer toReturn = 0;
 
 		EntityTransaction trx = this.getTransaction();
+		
+		toReturn = validarDigitacao(usuario);
 
-		if ( validarDigitacao(usuario) == VariaveisProjeto.DIGITACAO_OK) {
+		if ( toReturn == VariaveisProjeto.DIGITACAO_OK) {
 
 			try {
 
 				trx.begin();
 				this.getUsuarioDao().update(usuario);
 				trx.commit();
+				toReturn = VariaveisProjeto.ALTERACAO_REALIZADA;
 
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -73,7 +79,7 @@ public class UsuarioService extends ConexaoBancoService {
 				this.close();
 			}
 		} else {
-			toReturn = VariaveisProjeto.CAMPO_VAZIO;
+			toReturn = VariaveisProjeto.NOME_CAMPO_VAZIO;
 		}
 		return toReturn; 
 	}
@@ -88,6 +94,7 @@ public class UsuarioService extends ConexaoBancoService {
 			Usuario usuarioEncontrado = this.getUsuarioDao().findById(usuario.getId());
 			this.getUsuarioDao().remove(usuarioEncontrado);;
 			trx.commit();
+			toReturn = VariaveisProjeto.EXCLUSAO_REALIZADA;
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -121,7 +128,7 @@ public class UsuarioService extends ConexaoBancoService {
 	public Integer validarDigitacao(Usuario usuario) {
 
 		if ( VariaveisProjeto.digitacaoCampo(usuario.getUsername())) {
-			return VariaveisProjeto.CAMPO_VAZIO;
+			return VariaveisProjeto.NOME_CAMPO_VAZIO;
 		}
 		return VariaveisProjeto.DIGITACAO_OK;
 	}

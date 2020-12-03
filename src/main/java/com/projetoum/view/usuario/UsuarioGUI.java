@@ -1,4 +1,4 @@
-package com.projetoum.view;
+package com.projetoum.view.usuario;
 
 import java.awt.BorderLayout;
 
@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import com.projetoum.estrutura.util.VariaveisProjeto;
+import com.projetoum.model.modells.Departamento;
 import com.projetoum.model.modells.Usuario;
 import com.projetoum.model.service.UsuarioService;
 
@@ -16,6 +17,7 @@ import com.projetoum.model.service.UsuarioService;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -353,28 +355,23 @@ public class UsuarioGUI extends JFrame {
 			}
 		});
 
-		textFieldEmail.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				if ( verificaDigitacaoDoEmail() ) {
-					textFieldEmail.requestFocus();	
-				} else {
-					digitacaoEmailValido();
-				}
+		/*
+		 * textFieldEmail.addFocusListener(new FocusAdapter() {
+		 * 
+		 * @Override public void focusLost(FocusEvent e) { if (
+		 * verificaDigitacaoDoEmail() ) { textFieldEmail.requestFocus(); } else {
+		 * digitacaoEmailValido(); }
+		 * 
+		 * } });
+		 */
 
-			}
-		});
-
-		passwordFieldSenha.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				if ( verificaDigitacaoSenha() ) {
-					passwordFieldSenha.requestFocus();	
-				} else {
-					digitacaoSenhaValida();
-				}
-			}
-		});
+		/*
+		 * passwordFieldSenha.addFocusListener(new FocusAdapter() {
+		 * 
+		 * @Override public void focusLost(FocusEvent e) { if ( verificaDigitacaoSenha()
+		 * ) { passwordFieldSenha.requestFocus(); } else { digitacaoSenhaValida(); } }
+		 * });
+		 */
 
 		////////////////KEY PRESSED///////////////////////////////
 		
@@ -436,30 +433,98 @@ public class UsuarioGUI extends JFrame {
 
 	////////////////////////////////////////////////////////////////////
 	private void incluir() {
+		
+		Integer toReturn = 0;
+		
 		Usuario usuario = pegarDadosUsuario();
 
 		UsuarioService usuarioService = new UsuarioService();
+		
+		Departamento departamento = new Departamento();
 
-		usuarioService.save(usuario);
+		toReturn = usuarioService.save(usuario);
+		
+		if(toReturn == VariaveisProjeto.NOME_CAMPO_VAZIO)
+		{
+			status = false;
+			mudaStatusCheckNome();
+			showMensagem("O campo Nome deve ser informado", "Erro", JOptionPane.ERROR_MESSAGE);
+		}
+		
+		if(toReturn == VariaveisProjeto.ERRO_INCLUSAO)
+		{
+			showMensagem("Erro na inclusão do registro, verifique com seu administrador!!", "Erro", JOptionPane.ERROR_MESSAGE);
+		}
+		
+		if(toReturn == VariaveisProjeto.INCLUSAO_REALIZADA)
+		{
+			showMensagem("Inclusão realizada com sucesso!!", "OK", JOptionPane.YES_OPTION);
+			
+			limpaTextoCampo();
+			
+			usuario = new Usuario();
+			
+		}
+	
 
 	}
 
 
 	protected void excluir() {
+		
+		Integer toReturn = 0;
 		Usuario usuario = pegarDadosUsuario();
 
 		UsuarioService usuarioService = new UsuarioService();
 
-		usuarioService.delete(usuario);
+		toReturn = usuarioService.delete(usuario);
+		
+		if(toReturn == VariaveisProjeto.ERRO_EXCLUSAO)
+		{
+			showMensagem("Erro na exclusão do registro, verifique com seu administrador!!", "Erro", JOptionPane.ERROR_MESSAGE);
+		}
+		
+		if(toReturn == VariaveisProjeto.EXCLUSAO_REALIZADA)
+		{
+			showMensagem("Exclusão realizada com sucesso!!", "OK", JOptionPane.OK_OPTION);
+			
+			limpaTextoCampo();
+			
+			usuario = new Usuario();
+		}
 
 	}
 
 	protected void alterar() {
+		
+		Integer toReturn = 0;
 		Usuario usuario = pegarDadosUsuario();
 
 		UsuarioService usuarioService = new UsuarioService();
 
-		usuarioService.update(usuario);
+		toReturn = usuarioService.update(usuario);
+		
+		
+		if(toReturn == VariaveisProjeto.ERRO_ALTERACAO)
+		{
+			showMensagem("Erro na alteração do registro, verifique com seu administrador!!", "Erro", JOptionPane.ERROR_MESSAGE);
+		}
+		
+		if(toReturn == VariaveisProjeto.ALTERACAO_REALIZADA)
+		{
+			showMensagem("Alteração realizada com sucesso!!", "OK", JOptionPane.OK_OPTION);
+			
+			limpaTextoCampo();
+			
+			usuario = new Usuario();
+		}
+		
+		
+	}
+	
+	private void showMensagem(String mensagem, String status, int option)
+	{
+		JOptionPane.showMessageDialog(null, mensagem, status, option);
 	}
 
 	@SuppressWarnings("deprecation")
