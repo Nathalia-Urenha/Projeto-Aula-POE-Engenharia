@@ -1,6 +1,5 @@
 package com.projetoum.view.usuario;
 
-import java.awt.BorderLayout;
 
 import java.awt.EventQueue;
 
@@ -262,6 +261,7 @@ public class UsuarioGUI extends JFrame {
 	}
 
 
+	@SuppressWarnings("deprecation")
 	private boolean verificaDigitacaoSenha() {
 		if ( VariaveisProjeto.digitacaoCampo(passwordFieldSenha.getText())) {
 			status = false;
@@ -338,11 +338,13 @@ public class UsuarioGUI extends JFrame {
 		///////////////////FOCUS////////////////////////////////
 
 		
-		/*
-		 * textFieldCodigo.addFocusListener(new FocusAdapter() {
-		 * 
-		 * @Override public void focusLost(FocusEvent e){ buscarUsuario(); } });
-		 */
+		
+		  textFieldCodigo.addFocusListener(new FocusAdapter() {
+		  
+		  @Override public void focusLost(FocusEvent e){ buscarUsuario(); 
+		  } 
+		  });
+		 
 		 
 		textFieldNome.addFocusListener(new FocusAdapter() {
 			@Override
@@ -355,23 +357,34 @@ public class UsuarioGUI extends JFrame {
 			}
 		});
 
-		/*
-		 * textFieldEmail.addFocusListener(new FocusAdapter() {
-		 * 
-		 * @Override public void focusLost(FocusEvent e) { if (
-		 * verificaDigitacaoDoEmail() ) { textFieldEmail.requestFocus(); } else {
-		 * digitacaoEmailValido(); }
-		 * 
-		 * } });
-		 */
+		
+		  textFieldEmail.addFocusListener(new FocusAdapter() {
+		  
+		  @Override 
+		  public void focusLost(FocusEvent e) { 
+		  if (verificaDigitacaoDoEmail() ) { 
+		  		textFieldEmail.requestFocus(); 
+		  } 
+		  else {
+		  		digitacaoEmailValido(); 
+		  }
+		  
+		  } });
+		 
 
-		/*
-		 * passwordFieldSenha.addFocusListener(new FocusAdapter() {
-		 * 
-		 * @Override public void focusLost(FocusEvent e) { if ( verificaDigitacaoSenha()
-		 * ) { passwordFieldSenha.requestFocus(); } else { digitacaoSenhaValida(); } }
-		 * });
-		 */
+		
+		  passwordFieldSenha.addFocusListener(new FocusAdapter() {
+		  
+		  @Override public void focusLost(FocusEvent e) { 
+		  if ( verificaDigitacaoSenha())  { 
+		  	passwordFieldSenha.requestFocus(); 
+		  } 
+		  else { 
+		  		digitacaoSenhaValida(); 
+		  } 
+		  }
+		  });
+		 
 
 		////////////////KEY PRESSED///////////////////////////////
 		
@@ -438,34 +451,29 @@ public class UsuarioGUI extends JFrame {
 		
 		Usuario usuario = pegarDadosUsuario();
 
+		Departamento departamento = new Departamento();
+		
+		departamento.setId(1);
+		departamento.setNome("Vendas");
+		
+		usuario.setDepartamento(departamento);
+		
 		UsuarioService usuarioService = new UsuarioService();
 		
-		Departamento departamento = new Departamento();
-
 		toReturn = usuarioService.save(usuario);
 		
-		if(toReturn == VariaveisProjeto.NOME_CAMPO_VAZIO)
-		{
-			status = false;
-			mudaStatusCheckNome();
-			showMensagem("O campo Nome deve ser informado", "Erro", JOptionPane.ERROR_MESSAGE);
-		}
+		erroDigitacao(toReturn);
 		
-		if(toReturn == VariaveisProjeto.ERRO_INCLUSAO)
-		{
-			showMensagem("Erro na inclusão do registro, verifique com seu administrador!!", "Erro", JOptionPane.ERROR_MESSAGE);
+		if ( toReturn == VariaveisProjeto.ERRO_INCLUSAO ) {
+			showMensagem("Erro na Inclusão do Registro, verifique com seu administrador!",
+					   	 "Erro",JOptionPane.ERROR_MESSAGE);
 		}
-		
-		if(toReturn == VariaveisProjeto.INCLUSAO_REALIZADA)
-		{
-			showMensagem("Inclusão realizada com sucesso!!", "OK", JOptionPane.YES_OPTION);
-			
+		if ( toReturn == VariaveisProjeto.INCLUSAO_REALIZADA) {
+			showMensagem("Inclusão do Registro realizada com sucesso!",
+					     "OK",JOptionPane.OK_OPTION);
 			limpaTextoCampo();
-			
 			usuario = new Usuario();
-			
 		}
-	
 
 	}
 
@@ -473,23 +481,26 @@ public class UsuarioGUI extends JFrame {
 	protected void excluir() {
 		
 		Integer toReturn = 0;
+		
 		Usuario usuario = pegarDadosUsuario();
-
+		
+		Departamento departamento = new Departamento();
+		
+		departamento.setId(1);
+		departamento.setNome("Vendas");
+		
 		UsuarioService usuarioService = new UsuarioService();
-
+		
 		toReturn = usuarioService.delete(usuario);
 		
-		if(toReturn == VariaveisProjeto.ERRO_EXCLUSAO)
-		{
-			showMensagem("Erro na exclusão do registro, verifique com seu administrador!!", "Erro", JOptionPane.ERROR_MESSAGE);
+		if ( toReturn == VariaveisProjeto.ERRO_EXCLUSAO ) {
+			showMensagem("Erro na Exclusão do Registro, verifique com seu administrador!",
+					   	 "Erro",JOptionPane.ERROR_MESSAGE);
 		}
-		
-		if(toReturn == VariaveisProjeto.EXCLUSAO_REALIZADA)
-		{
-			showMensagem("Exclusão realizada com sucesso!!", "OK", JOptionPane.OK_OPTION);
-			
+		if ( toReturn == VariaveisProjeto.EXCLUSAO_REALIZADA) {
+			showMensagem("Exclusão do Registro realizada com sucesso!",
+					     "OK",JOptionPane.OK_OPTION);
 			limpaTextoCampo();
-			
 			usuario = new Usuario();
 		}
 
@@ -498,28 +509,50 @@ public class UsuarioGUI extends JFrame {
 	protected void alterar() {
 		
 		Integer toReturn = 0;
-		Usuario usuario = pegarDadosUsuario();
-
-		UsuarioService usuarioService = new UsuarioService();
-
+		
+	    Usuario usuario = pegarDadosUsuario();
+	    
+	    Departamento departamento = new Departamento();
+		
+		departamento.setId(1);
+		departamento.setNome("Vendas");
+	    
+	    UsuarioService usuarioService = new UsuarioService();
+		
 		toReturn = usuarioService.update(usuario);
 		
+		erroDigitacao(toReturn);
 		
-		if(toReturn == VariaveisProjeto.ERRO_ALTERACAO)
-		{
-			showMensagem("Erro na alteração do registro, verifique com seu administrador!!", "Erro", JOptionPane.ERROR_MESSAGE);
+		if ( toReturn == VariaveisProjeto.ERRO_ALTERACAO ) {
+			showMensagem("Erro na Alteração do Registro, verifique com seu administrador!",
+					   	 "Erro",JOptionPane.ERROR_MESSAGE);
 		}
-		
-		if(toReturn == VariaveisProjeto.ALTERACAO_REALIZADA)
-		{
-			showMensagem("Alteração realizada com sucesso!!", "OK", JOptionPane.OK_OPTION);
-			
+		if ( toReturn == VariaveisProjeto.ALTERACAO_REALIZADA) {
+			showMensagem("Alteração do Registro realizada com sucesso!",
+					     "OK",JOptionPane.OK_OPTION);
 			limpaTextoCampo();
-			
 			usuario = new Usuario();
 		}
 		
 		
+	}
+	
+	private void erroDigitacao(Integer toReturn) {
+		if ( toReturn == VariaveisProjeto.USUARIO_USER_NAME ) {
+			 status = false;
+			 mudaStatusCheckNome();
+			 showMensagem("Erro na digitação do Nome, verifique!","Erro", JOptionPane.ERROR_MESSAGE);
+		}
+		if ( toReturn == VariaveisProjeto.USUARIO_EMAIL ) {
+			 status = false;
+			 mudaStatusCheckNome();
+			 showMensagem("Erro na digitação do E-mail, verifique!","Erro", JOptionPane.ERROR_MESSAGE);
+		}
+		if ( toReturn == VariaveisProjeto.USUARIO_PASSWORD ) {
+			 status = false;
+			 mudaStatusCheckNome();
+			 showMensagem("Erro na digitação da Senha, verifique!","Erro", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	
 	private void showMensagem(String mensagem, String status, int option)
@@ -577,5 +610,6 @@ public class UsuarioGUI extends JFrame {
 		textFieldEmail.setText(VariaveisProjeto.LIMPA_CAMPO);
 		passwordFieldSenha.setText(VariaveisProjeto.LIMPA_CAMPO);
 		rdbtnAtivo.setSelected(false);
+		rdbtnAdmin.setSelected(false);
 	}
 }

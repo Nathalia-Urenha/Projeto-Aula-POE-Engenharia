@@ -2,6 +2,7 @@ package com.projetoum.model.modells;
 
 import java.util.List;
 
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,13 +15,13 @@ import javax.persistence.Table;
 @Table(name="TAB_DEPARTAMENTO")
 public class Departamento {
 	
-	private Long id;
+	private Integer id;
 	private String nome;
 	
 	private List<Usuario> usuario;
 	
 	
-	public Departamento(Long id, String nome) {
+	public Departamento(Integer id, String nome) {
 		this.id = id;
 		this.nome = nome;
 	}	
@@ -33,11 +34,11 @@ public class Departamento {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="id", nullable = false)
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 	
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 	
