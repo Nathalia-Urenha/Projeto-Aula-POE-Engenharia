@@ -339,12 +339,12 @@ public class UsuarioGUI extends JFrame {
 
 		
 		
-		  textFieldCodigo.addFocusListener(new FocusAdapter() {
+		/*
+		 * textFieldCodigo.addFocusListener(new FocusAdapter() {
+		 * 
+		 * @Override public void focusLost(FocusEvent e){ buscarUsuario(); } });
+		 */
 		  
-		  @Override public void focusLost(FocusEvent e){ buscarUsuario(); 
-		  } 
-		  });
-		 
 		 
 		textFieldNome.addFocusListener(new FocusAdapter() {
 			@Override
@@ -587,7 +587,10 @@ public class UsuarioGUI extends JFrame {
 		Usuario usuario = new Usuario();
 
 		if (VariaveisProjeto.digitacaoCampo(textFieldCodigo.getText())){
-			textFieldCodigo.requestFocus(); return; }
+			textFieldCodigo.requestFocus(); 
+			return; 
+			
+		}
 
 		Integer id = Integer.valueOf(textFieldCodigo.getText());
 
