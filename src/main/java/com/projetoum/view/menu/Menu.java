@@ -1,9 +1,11 @@
 package com.projetoum.view.menu;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
@@ -89,6 +91,15 @@ public class Menu extends JFrame {
 		createEvents();
 	}
 	
+	private void centralizaForm(JInternalFrame frame) {
+		Dimension desktopSize = this.getSize();
+		
+		Dimension internalFrameSize = frame.getSize();
+		
+		frame.setLocation((desktopSize.width - internalFrameSize.width) / 2, (desktopSize.height - internalFrameSize.height) / 2 );
+	}
+	
+	
 	private void createEvents() {
 		////////////ACTION LISTENER///////////////
 		mntmUsuario.addActionListener(new ActionListener() {
@@ -96,6 +107,7 @@ public class Menu extends JFrame {
 				TabelaUsuario tabelaUsuario = new TabelaUsuario();
 				contentPane.add(tabelaUsuario);
 				tabelaUsuario.setVisible(true);
+	//			centralizaForm();
 			}
 		});
 		

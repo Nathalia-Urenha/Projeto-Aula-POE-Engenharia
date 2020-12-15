@@ -6,7 +6,12 @@ public class VariaveisProjeto {
 
 
 	public static final String PERSISTENCE_UNIT_NAME = "projetoum";
-
+	
+	public static final Integer INCLUSAO = 1;
+	public static final Integer ALTERACAO = 2;
+	public static final Integer EXCLUSAO = 3;
+	public static final Integer CONSULTA = 4;
+	
 	public static final Integer ERRO_INCLUSAO = 10;
 	public static final Integer ERRO_ALTERACAO = 20;
 	public static final Integer ERRO_EXCLUSAO = 30;

@@ -4,6 +4,7 @@ package com.projetoum.view.usuario;
 import java.awt.EventQueue;
 
 
+
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
@@ -17,10 +18,12 @@ import javax.swing.JButton;
 import javax.swing.ImageIcon;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.ListSelectionModel;
+import javax.swing.RowFilter;
 
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.PatternSyntaxException;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
@@ -28,11 +31,14 @@ import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTextField;
 
+import com.projetoum.estrutura.util.VariaveisProjeto;
 import com.projetoum.model.modells.Usuario;
 import com.projetoum.model.service.UsuarioService;
 import com.projetoum.view.usuario.TabelaUsuarioModel;
+import com.projetoum.view.usuario.UsuarioGUI;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
+import java.awt.event.KeyAdapter;
 
 public class TabelaUsuario extends JInternalFrame {
 	
@@ -40,7 +46,7 @@ public class TabelaUsuario extends JInternalFrame {
 	private static final long serialVersionUID = 394883602175195029L;
 	private JPanel contentPane;
 	private JTable tabelaUsuario;
-	private JTextField textField;
+	private JTextField textFielPesquisar;
 	private JScrollPane scrollPane;
 	private JButton btnIncluir;
 	private JButton btnAlterar;
@@ -116,10 +122,12 @@ public class TabelaUsuario extends JInternalFrame {
 		scrollPane = new JScrollPane();
 		
 		btnIncluir = new JButton("Incluir");
+		
 		btnIncluir.setMnemonic(KeyEvent.VK_I);
 		btnIncluir.setIcon(new ImageIcon(TabelaUsuario.class.getResource("/com/projetoum/estrutura/imagens/book_add.png")));
 		
 		btnAlterar = new JButton("Alterar");
+		
 		btnAlterar.setMnemonic(KeyEvent.VK_A);
 		btnAlterar.setIcon(new ImageIcon(TabelaUsuario.class.getResource("/com/projetoum/estrutura/imagens/book_edit.png")));
 		
@@ -142,10 +150,12 @@ public class TabelaUsuario extends JInternalFrame {
 		
 		lblPesquisar = new JLabel("Pesquisar:");
 		
-		textField = new JTextField();
-		textField.setColumns(10);
+		textFielPesquisar = new JTextField();
+		
+		textFielPesquisar.setColumns(10);
 		
 		btnPesquisar = new JButton("");
+		
 		btnPesquisar.setMnemonic(KeyEvent.VK_P);
 		btnPesquisar.setToolTipText("Pesquisar usu\u00E1rio cadastrado\r\n");
 		btnPesquisar.setIcon(new ImageIcon(TabelaUsuario.class.getResource("/com/projetoum/estrutura/imagens/search.png")));
@@ -202,7 +212,7 @@ public class TabelaUsuario extends JInternalFrame {
 									.addGap(64)
 									.addComponent(lblPesquisar)
 									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(textField, GroupLayout.PREFERRED_SIZE, 314, GroupLayout.PREFERRED_SIZE)
+									.addComponent(textFielPesquisar, GroupLayout.PREFERRED_SIZE, 314, GroupLayout.PREFERRED_SIZE)
 									.addPreferredGap(ComponentPlacement.RELATED)
 									.addComponent(btnPesquisar, GroupLayout.PREFERRED_SIZE, 39, GroupLayout.PREFERRED_SIZE)))
 							.addPreferredGap(ComponentPlacement.RELATED, 153, Short.MAX_VALUE))
@@ -215,7 +225,7 @@ public class TabelaUsuario extends JInternalFrame {
 					.addGap(30)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblPesquisar)
-						.addComponent(textField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(textFielPesquisar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(btnPesquisar, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE))
 					.addGap(18)
 					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 220, GroupLayout.PREFERRED_SIZE)
@@ -332,13 +342,71 @@ public class TabelaUsuario extends JInternalFrame {
 				dispose();
 			}
 		});
+		
+		btnIncluir.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				incluirUsuario();
+				iniciaPaginacao();
+			}
+
+		});
+		
+		btnAlterar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				alterarUsuario();
+				iniciaPaginacao();
+			}
+
+		});
+		
+		btnPesquisar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		
 		/////////////////// ITEM STATE CHANGED ////////////////////////
 		comboBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				iniciaPaginacao();
 			}
 		});
+		//////////////////////KEY//////////////////////////
+		textFielPesquisar.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				String filtro = textFielPesquisar.getText();
+				fitraNomeUsuario(filtro);
+			}
+
+		});
+	}
 	
+	private void fitraNomeUsuario(String filtro) {
+		RowFilter<TabelaUsuarioModel, Object> rowFilter = null;
+		try {
+			rowFilter = RowFilter.regexFilter(filtro);
+			
+		}catch(PatternSyntaxException e) {
+			return;
+		}
+		sortTabelaUsuario.setRowFilter(rowFilter);
+	}
+	
+	private void incluirUsuario() {
+		UsuarioGUI usuario = new UsuarioGUI(new JFrame(), true, tabelaUsuario, tabelaUsuarioModel, 0, VariaveisProjeto.INCLUSAO);
+		usuario.setLocationRelativeTo(null);
+		usuario.setResizable(false);
+		usuario.setVisible(true);
+	}
+	
+	private void alterarUsuario() {
+		if(tabelaUsuario.getSelectedRow()!= -1 && tabelaUsuario.getSelectedRow() < tabelaUsuarioModel.getRowCount()) {
+			int linha = tabelaUsuario.getSelectedRow();
+			UsuarioGUI usuario = new UsuarioGUI(new JFrame(), true, tabelaUsuario, tabelaUsuarioModel, linha, VariaveisProjeto.ALTERACAO);
+			usuario.setLocationRelativeTo(null);
+			usuario.setVisible(true);
+		}
+		
 	}
 	
 	protected void iniciaPaginacao() {

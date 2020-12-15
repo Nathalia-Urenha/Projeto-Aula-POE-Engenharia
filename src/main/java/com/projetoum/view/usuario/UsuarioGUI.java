@@ -1,7 +1,6 @@
 package com.projetoum.view.usuario;
 
 
-import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -21,7 +20,10 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JRadioButton;
+import javax.swing.JTable;
 import javax.swing.JButton;
+import javax.swing.JDialog;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JPasswordField;
@@ -32,7 +34,7 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.ImageIcon;
 
-public class UsuarioGUI extends JFrame {
+public class UsuarioGUI extends JDialog {
 
 
 	private static final long serialVersionUID = 1867371822121507791L;
@@ -48,6 +50,10 @@ public class UsuarioGUI extends JFrame {
 	private JPasswordField passwordFieldSenha;
 	private JLabel lblCodigo;
 	private JTextField textFieldCodigo;
+	private JTextField textFieldNomeDepartamento;
+	private JLabel lblDepartamento;
+	private JLabel lblNome;
+	private JLabel lblSenha;
 
 	private JLabel checkNome;
 	private JLabel checkEmail;
@@ -55,35 +61,33 @@ public class UsuarioGUI extends JFrame {
 
 	private boolean status = true; 
 
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					UsuarioGUI frame = new UsuarioGUI();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
+	private JTable tabelaUsuario;
+	private TabelaUsuarioModel tabelaUsuarioModel;
+	
+	private int linha =0;
+	private int acao = 0;
+	
 	/**
 	 * Create the frame.
 	 */
-	public UsuarioGUI() {
-		setTitle("Cadastro de Usu\u00E1rios");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	public UsuarioGUI(JFrame frame, boolean modal, JTable tabelaUsuario, TabelaUsuarioModel tabelaUsuarioModel, int linha, int acao) {
+		
+		super(frame, modal);
+		
+		this.tabelaUsuario = tabelaUsuario;
+		this.tabelaUsuarioModel = tabelaUsuarioModel;
+		this.linha = linha;
+		this.acao = acao;
+	
+		
+		setTitle("Cadastro de Usuário");
+		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 690, 414);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 
-		JLabel lblNome = new JLabel("Nome:");
+		lblNome = new JLabel("Nome:");
 
 		textFieldNome = new JTextField();
 
@@ -97,7 +101,7 @@ public class UsuarioGUI extends JFrame {
 
 		textFieldEmail.setColumns(10);
 
-		JLabel lblSenha = new JLabel("Senha:");
+		lblSenha = new JLabel("Senha:");
 		lblSenha.setHorizontalAlignment(SwingConstants.TRAILING);
 
 		rdbtnAtivo = new JRadioButton("Ativo");
@@ -137,86 +141,137 @@ public class UsuarioGUI extends JFrame {
 
 		checkSenha = new JLabel("");
 		checkSenha.setIcon(new ImageIcon(UsuarioGUI.class.getResource("/com/projetoum/estrutura/imagens/ok.png")));
+		
+		lblDepartamento = new JLabel("Departamento:");
+		
+		textFieldNomeDepartamento = new JTextField();
+		textFieldNomeDepartamento.setColumns(10);
+		
+		JButton btnNewButton = new JButton("");
+		btnNewButton.setMnemonic(KeyEvent.VK_D);
+		btnNewButton.setToolTipText("Buscar Departamento");
+		btnNewButton.setIcon(new ImageIcon(UsuarioGUI.class.getResource("/com/projetoum/estrutura/imagens/search.png")));
 
 
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
-				gl_contentPane.createParallelGroup(Alignment.LEADING)
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-						.addGap(74)
-						.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-								.addComponent(lblCodigo)
-								.addComponent(lblSenha)
-								.addComponent(lblEmail)
-								.addComponent(lblNome))
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_contentPane.createSequentialGroup()
-										.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
-												.addGroup(gl_contentPane.createSequentialGroup()
-														.addComponent(btnIncluir)
-														.addGap(18)
-														.addComponent(btnAlterar)
-														.addGap(18)
-														.addComponent(btnExcluir)
-														.addGap(18)
-														.addComponent(btnSair))
-												.addGroup(gl_contentPane.createSequentialGroup()
-														.addComponent(rdbtnAtivo)
-														.addGap(18)
-														.addComponent(rdbtnAdmin))
-												.addComponent(textFieldEmail, GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE)
-												.addComponent(textFieldNome, GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE)
-												.addComponent(passwordFieldSenha))
-										.addPreferredGap(ComponentPlacement.UNRELATED)
-										.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-												.addComponent(checkSenha)
-												.addComponent(checkEmail)
-												.addComponent(checkNome)))
-								.addComponent(textFieldCodigo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-						.addContainerGap(116, Short.MAX_VALUE))
-				);
+					.addGap(68)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+						.addComponent(lblDepartamento)
+						.addComponent(lblCodigo)
+						.addComponent(lblSenha)
+						.addComponent(lblEmail)
+						.addComponent(lblNome))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(rdbtnAtivo)
+							.addGap(18)
+							.addComponent(rdbtnAdmin))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(btnIncluir)
+							.addGap(18)
+							.addComponent(btnAlterar)
+							.addGap(18)
+							.addComponent(btnExcluir)
+							.addGap(18)
+							.addComponent(btnSair))
+						.addComponent(textFieldCodigo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
+								.addComponent(textFieldNomeDepartamento, Alignment.LEADING)
+								.addComponent(textFieldEmail, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE)
+								.addComponent(textFieldNome, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE)
+								.addComponent(passwordFieldSenha, Alignment.LEADING))
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
+								.addComponent(checkSenha)
+								.addComponent(checkEmail)
+								.addComponent(checkNome))))
+					.addContainerGap(105, Short.MAX_VALUE))
+		);
 		gl_contentPane.setVerticalGroup(
-				gl_contentPane.createParallelGroup(Alignment.LEADING)
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-						.addGap(62)
-						.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-								.addComponent(lblCodigo)
-								.addComponent(textFieldCodigo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-						.addGap(18)
-						.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-								.addComponent(lblNome)
-								.addComponent(textFieldNome, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(checkNome))
-						.addGap(26)
-						.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-								.addComponent(lblEmail)
-								.addComponent(textFieldEmail, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(checkEmail))
-						.addGap(26)
-						.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-								.addComponent(lblSenha)
-								.addComponent(passwordFieldSenha, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(checkSenha))
-						.addGap(18)
-						.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-								.addComponent(rdbtnAtivo)
-								.addComponent(rdbtnAdmin))
-						.addGap(18)
-						.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-								.addComponent(btnIncluir)
-								.addComponent(btnAlterar)
-								.addComponent(btnExcluir)
-								.addComponent(btnSair))
-						.addContainerGap(71, Short.MAX_VALUE))
-				);
+					.addGap(62)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblCodigo)
+						.addComponent(textFieldCodigo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(18)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblNome)
+						.addComponent(textFieldNome, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(checkNome))
+					.addGap(26)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblEmail)
+						.addComponent(textFieldEmail, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(checkEmail))
+					.addGap(26)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblSenha)
+						.addComponent(passwordFieldSenha, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(checkSenha))
+					.addGap(18)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
+						.addComponent(btnNewButton, 0, 0, Short.MAX_VALUE)
+						.addGroup(Alignment.LEADING, gl_contentPane.createParallelGroup(Alignment.BASELINE)
+							.addComponent(lblDepartamento)
+							.addComponent(textFieldNomeDepartamento)))
+					.addPreferredGap(ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(rdbtnAtivo)
+						.addComponent(rdbtnAdmin))
+					.addGap(18)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(btnIncluir)
+						.addComponent(btnAlterar)
+						.addComponent(btnExcluir)
+						.addComponent(btnSair))
+					.addGap(25))
+		);
 		contentPane.setLayout(gl_contentPane);
 		createEvents();
 
 		limpaTextoCampo();
 
 		desabilitaCheckCampos();
+		
+		/*
+		 * btnAlterar.setEnabled(false); btnIncluir.setEnabled(false);
+		 * btnExcluir.setEnabled(false);
+		 */
+		
+		configuraAcaoUsuario();
 	}
+	
+	
+	private void configuraAcaoUsuario() {
+		
+		if(this.acao == VariaveisProjeto.INCLUSAO) {
+			btnIncluir.setEnabled(true);
+			btnAlterar.setVisible(false);
+			btnExcluir.setVisible(false);
+		}
+		
+		if(this.acao == VariaveisProjeto.ALTERACAO) {
+			btnAlterar.setEnabled(true);
+			btnIncluir.setVisible(false);
+			btnExcluir.setVisible(false);
+			buscarUsuario();
+		}
+		
+		if(this.acao == VariaveisProjeto.EXCLUSAO) {
+			buscarUsuario();
+			btnExcluir.setEnabled(true);
+			btnAlterar.setVisible(false);
+			btnIncluir.setVisible(false);
+		}
+	}
+
 
 	/////////////////////////////////////////////
 	private boolean verificaDigitacaoDoNome() {
@@ -472,6 +527,7 @@ public class UsuarioGUI extends JFrame {
 			showMensagem("Inclusão do Registro realizada com sucesso!",
 					     "OK",JOptionPane.OK_OPTION);
 			limpaTextoCampo();
+			tabelaUsuarioModel.fireTableDataChanged();
 			usuario = new Usuario();
 		}
 
@@ -516,6 +572,7 @@ public class UsuarioGUI extends JFrame {
 		
 		departamento.setId(1);
 		departamento.setNome("Vendas");
+		usuario.setDepartamento(departamento);
 	    
 	    UsuarioService usuarioService = new UsuarioService();
 		
@@ -530,6 +587,8 @@ public class UsuarioGUI extends JFrame {
 		if ( toReturn == VariaveisProjeto.ALTERACAO_REALIZADA) {
 			showMensagem("Alteração do Registro realizada com sucesso!",
 					     "OK",JOptionPane.OK_OPTION);
+			
+			tabelaUsuarioModel.fireTableDataChanged();
 			limpaTextoCampo();
 			usuario = new Usuario();
 		}
@@ -562,48 +621,70 @@ public class UsuarioGUI extends JFrame {
 
 	@SuppressWarnings("deprecation")
 	public Usuario pegarDadosUsuario() {
+		
 		Usuario usuario = new Usuario();
-
-		if (!"".equals(textFieldCodigo.getText())){
-			usuario.setId( Integer.valueOf(textFieldCodigo.getText()));
+		
+		
+		if (VariaveisProjeto.digitacaoCampo(textFieldCodigo.getText())){
+		 textFieldCodigo.requestFocus(); 
 		}
-
+		
+	    if (VariaveisProjeto.digitacaoCampo(textFieldCodigo.getText()) == false ) {
+	    	usuario.setId(Integer.valueOf(textFieldCodigo.getText()));
+	    }
+	    
 		usuario.setUsername(textFieldNome.getText());
 		usuario.setEmail(textFieldEmail.getText());
 		usuario.setPassword(passwordFieldSenha.getText());
-
+		
 		if (rdbtnAtivo.isSelected()) {
 			usuario.setAtivo(true);
 		} else  {
 			usuario.setAtivo(false);
 		}
-
+		
+		if (rdbtnAdmin.isSelected()) {
+			usuario.setAdmin(true);
+		} else {
+			usuario.setAdmin(false);
+		}
+		
+		
 		return usuario;
 
 	}
 
 	private void buscarUsuario() {
 
-		Usuario usuario = new Usuario();
+		
+		  Usuario usuario = new Usuario();
+		 
+		/* if (VariaveisProjeto.digitacaoCampo(textFieldCodigo.getText())){
+		 * textFieldCodigo.requestFocus(); return;
+		 * 
+		 * }
+		 * 
+		 * Integer id = Integer.valueOf(textFieldCodigo.getText());
+		 */
+		
+		usuario = tabelaUsuarioModel.getUsuario(this.linha);
+		
+		//UsuarioService usuarioService = new UsuarioService();
 
-		if (VariaveisProjeto.digitacaoCampo(textFieldCodigo.getText())){
-			textFieldCodigo.requestFocus(); 
-			return; 
-			
-		}
-
-		Integer id = Integer.valueOf(textFieldCodigo.getText());
-
-		UsuarioService usuarioService = new UsuarioService();
-
-		usuario = usuarioService.findById(id);
-
+		//usuario = usuarioService.findById(usuario.getId());
+		
+		textFieldCodigo.setText(String.valueOf(usuario.getId()));
 		textFieldNome.setText(usuario.getUsername());
 		textFieldEmail.setText(usuario.getEmail());
 		passwordFieldSenha.setText(usuario.getPassword());
+		
+		
 
-
-		if ( usuario.isAtivo()) rdbtnAtivo.setSelected(true); 
+		if ( usuario.isAtivo()) 
+			rdbtnAtivo.setSelected(true); 
+		
+		if ( usuario.isAdmin()) 
+			rdbtnAdmin.setSelected(true); 
 
 	}
 
