@@ -128,7 +128,7 @@ public class UsuarioGUI extends JDialog {
 		lblCodigo = new JLabel("C\u00F3digo: ");
 
 		textFieldCodigo = new JTextField();
-
+		textFieldCodigo.setEditable(false);
 
 
 		textFieldCodigo.setColumns(10);
@@ -145,6 +145,7 @@ public class UsuarioGUI extends JDialog {
 		lblDepartamento = new JLabel("Departamento:");
 		
 		textFieldNomeDepartamento = new JTextField();
+		textFieldNomeDepartamento.setEditable(false);
 		textFieldNomeDepartamento.setColumns(10);
 		
 		JButton btnNewButton = new JButton("");
